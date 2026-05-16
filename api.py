@@ -25,10 +25,16 @@ def get_cryptos():
         return {"cryptos": VALID_SYMBOLS}
 
 def get_engine():
-        return create_engine(
-                        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-                        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}"
-                        f"/{os.getenv('DB_NAME')}"
+        database_url = os.getenv("DATABASE_URL")
+        if database_url:
+                # Railway fournit une URL complète
+                return create_engine(database_url)
+        else:
+                # Environnement local
+                return create_engine(
+                f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+                f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}"
+                f"/{os.getenv('DB_NAME')}"
                 )
 def run_query(sql, params=None):
         engine = get_engine()

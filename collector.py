@@ -17,13 +17,19 @@ CRYPTOS = {
 }
 
 def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", 5432),
-        dbname=os.getenv("DB_NAME", "cryptocompare"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD", "")
-    )
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        # Railway fournit une URL complète
+        return create_engine(database_url)
+    else:
+        # Environnement local
+        return psycopg2.connect(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=os.getenv("DB_PORT", 5432),
+            dbname=os.getenv("DB_NAME", "cryptocompare"),
+            user=os.getenv("DB_USER", "postgres"),
+            password=os.getenv("DB_PASSWORD", "")
+        )
     
 # ── Récupérer les prix actuels ──────────────────────────────
 def fetch_current_prices():
