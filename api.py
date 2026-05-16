@@ -118,3 +118,9 @@ def get_volatility():
 
         results.sort(key=lambda x: x['volatilite_pct'], reverse=True)
         return {"volatility": results}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("api:app", host="0.0.0.0", port=port)
